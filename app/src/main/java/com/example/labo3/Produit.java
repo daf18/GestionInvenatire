@@ -21,15 +21,17 @@ public class Produit implements Parcelable {
     private int qte;
     private static int nbProduits;
 
-    public Produit(String nom, String categ, double prix, int qte) {
-        this.id = ++id;
+    public Produit(int id, String nom, String categ, double prix, int qte) {
+        this.id = id; //TODO ++id for autoincrement
         this.nom = nom;
         this.categ = categ;
         this.prix = prix;
         this.qte = qte;
+        nbProduits++;
     }
 
     protected Produit(Parcel in) {
+        id = in.readInt();
         nom = in.readString();
         categ = in.readString();
         prix = in.readDouble();
@@ -99,13 +101,11 @@ public class Produit implements Parcelable {
 
     @Override
     public String toString() {
-        return "Produit{" +
-                "_id=" + id +
-                ", nom='" + nom + '\'' +
-                ", categ='" + categ + '\'' +
-                ", prix=" + prix +
-                ", qte=" + qte +
-                '}';
+        return "Produit " + id + "\n"+
+                "nom=" + nom +
+                ", categ=" + categ +",\n"+
+                "prix= $" + prix +
+                ", qte=" + qte;
     }
 
     @Override
