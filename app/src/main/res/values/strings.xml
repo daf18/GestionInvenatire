@@ -1,3 +1,11 @@
 <resources>
     <string name="app_name">Labo3</string>
+    <string name="ajouter_produit">Ajouter produit</string>
+    <string name="identifiant">Identifiant</string>
+    <string name="nom">Nom</string>
+    <string name="categorie">Catégorie</string>
+    <string name="prix">Prix</string>
+    <string name="quantite">Quantité</string>
+    <string name="annuler">Annuler</string>
+    <string name="ajouter">Ajouter</string>
 </resources>

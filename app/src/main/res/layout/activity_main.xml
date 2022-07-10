@@ -8,30 +8,21 @@
     android:layout_margin="15dp"
     tools:context=".MainActivity">
     <Button
-        android:id="@+id/ajouter"
+        android:id="@+id/btnAjouter"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="AJOUTER">
     </Button>
     <Button
-        android:id="@+id/lister"
+        android:id="@+id/btnLister"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="15dp"
         android:text="LISTER">
     </Button>
-    <TextView
-        android:id="@+id/textView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_marginTop="20dp"
-        android:textSize="18dp"
-        android:gravity="center"
-        android:text="Read text File in Android"/>
+
     <ListView
         android:id="@+id/listView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-/>
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
 </LinearLayout>

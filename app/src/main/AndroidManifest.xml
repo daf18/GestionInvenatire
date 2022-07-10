@@ -14,6 +14,9 @@
         android:theme="@style/Theme.Labo3"
         tools:targetApi="31">
         <activity
+            android:name=".AddProduct"
+            android:exported="true" />
+        <activity
             android:name=".MainActivity"
             android:exported="true">
             <intent-filter>
