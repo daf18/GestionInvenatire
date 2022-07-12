@@ -20,10 +20,15 @@ import android.widget.Toolbar;
 import com.google.android.material.navigation.NavigationView;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
@@ -53,6 +58,31 @@ public class MainActivity extends AppCompatActivity {
 
         listView = findViewById(R.id.listView);
 
+//String FILE = "/data/data/com.example.labo3/files/produits.txt";
+        String FILE = getFilesDir()+"/produits.txt";
+        Log.e("FILE",FILE);
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+            Path textFilePath = Paths.get(FILE);
+            try {
+                Files.createFile(textFilePath);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+
+//        try {
+//            File file = new File("produits.txt");
+//            if(file.createNewFile()){
+//                Log.e("Myfile","File created succesfully");
+//            }else{
+//                Log.e("Myfile","File already exists");
+//            }
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+        // FileOutputStream oFile = new FileOutputStream(file,false);
+
         drawerLayout= findViewById(R.id.drawerLayout);
         navigationView = findViewById(R.id.navigationView);
         //ajouter ToogleBar
@@ -78,7 +108,7 @@ public class MainActivity extends AppCompatActivity {
                     case R.id.nav_ajouter:
                         Log.i("drawerMenu","Ajouter was clicked");
                         //sauvegarderProduits();
-                        openAddProduct();
+                        ouvrirAjouterProduitActivity();
                         drawerLayout.closeDrawer(GravityCompat.START);
                         break;
 
@@ -103,8 +133,16 @@ public class MainActivity extends AppCompatActivity {
     public void chargerProduits(){
         String string = "";
         FileInputStream fis = null;
+//        FileInputStream fis = null;
+//        try {
+//            fis = new FileInputStream(file);
+//            fis = openFileInput(String.valueOf(file));
+//        } catch (FileNotFoundException e) {
+//            e.printStackTrace();
+//        }
         try {
-            fis = openFileInput("produits.txt");
+                fis = openFileInput("produits.txt");
+
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -133,6 +171,7 @@ public class MainActivity extends AppCompatActivity {
             e.printStackTrace();
         }
     }
+    //sauvegarde les produis de la listeProduits dans le fichier profuits.txt
     public void sauvegarderProduits() {
         ajoutNouveauProduit();
 
@@ -148,7 +187,7 @@ public class MainActivity extends AppCompatActivity {
             fos = openFileOutput("produits.txt", MODE_PRIVATE);
             fos.write(filecontent.toString().getBytes());
 
-            Toast.makeText(this, "Saved to "+getFilesDir(),Toast.LENGTH_LONG).show();
+  //          Toast.makeText(this, "Saved to "+getFilesDir(),Toast.LENGTH_LONG).show();
 
         }catch (IOException e){
             e.printStackTrace();
@@ -163,17 +202,18 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    //affiche listeProduit dans une listeView
     public void listerProduits(){
         adapter = new ArrayAdapter<>(this,
                 android.R.layout.simple_list_item_1, listeProduits);
         listView.setAdapter(adapter);
     }
-
-    private void openAddProduct(){
+    //ouvre l'activité add_product pour le formulaire ajouter produit
+    private void ouvrirAjouterProduitActivity(){
         Intent intent = new Intent(getApplicationContext(),AddProduct.class);
         startActivity(intent);
     }
-
+    //recupère le produit crée dans l'activité add_product et l'ajoute au listeProduits
     public void ajoutNouveauProduit(){
         Intent i = getIntent();
         Produit nProduit = i.getParcelableExtra("produit");
@@ -238,13 +278,13 @@ public class MainActivity extends AppCompatActivity {
 //        listView.setAdapter(adapter);
 //    }
 //
-////    private void openAddProduct(){
+////    private void ouvrirAjouterProduitActivity(){
 ////
 ////        sauvegarderProduits();
 ////    }
 //  //sauvegarde les produis de la listeProduits dans le fichier profuits.txt  TODO recupereaza produsul din addProd activity
 //    public void sauvegarderProduits() {
-//        //ouvre l'activité add_product pout le formulaire ajouter produit
+//        //ouvre l'activité add_product pour le formulaire ajouter produit
 //        Intent intent = new Intent(getApplicationContext(),AddProduct.class);
 //        startActivity(intent);
 //
