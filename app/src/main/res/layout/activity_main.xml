@@ -13,31 +13,11 @@
         android:gravity="center_horizontal"
         android:layout_margin="15dp">
 
-        <Button
-            android:id="@+id/btnAjouter"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="AJOUTER">
-        </Button>
-        <Button
-            android:id="@+id/btnSave"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="15dp"
-            android:text="Sauvegarder">
-        </Button>
-        <Button
-            android:id="@+id/btnLister"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="15dp"
-            android:text="LISTER">
-        </Button>
-
         <ListView
             android:id="@+id/listView"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            />
     </LinearLayout>
     <com.google.android.material.navigation.NavigationView
         android:layout_width="wrap_content"

@@ -29,14 +29,13 @@ import java.util.ArrayList;
 public class MainActivity extends AppCompatActivity {
     DrawerLayout drawerLayout;
     NavigationView navigationView;
-    Toolbar toolbar;
+    //Toolbar toolbar;
     ActionBarDrawerToggle actionBarDrawerToggle;
 
     //TODO check if it should be init here
     ArrayList<Produit> listeProduits = new ArrayList<>();
     ArrayAdapter adapter;
     ListView listView;
-    Button btnLister, btnAjouter,btnSave;
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
@@ -51,6 +50,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        listView = findViewById(R.id.listView);
 
         drawerLayout= findViewById(R.id.drawerLayout);
         navigationView = findViewById(R.id.navigationView);
@@ -69,14 +70,15 @@ public class MainActivity extends AppCompatActivity {
                 switch (item.getItemId()) {
                     case R.id.nav_lister:
                         Log.i("drawerMenu","Lister was clicked"+ listeProduits);
+                        sauvegarderProduits();
                         listerProduits();
                         drawerLayout.closeDrawer(GravityCompat.START);
                         break;
 
                     case R.id.nav_ajouter:
                         Log.i("drawerMenu","Ajouter was clicked");
-                      //  openAddProduct();
-                        sauvegarderProduits();
+                        //sauvegarderProduits();
+                        openAddProduct();
                         drawerLayout.closeDrawer(GravityCompat.START);
                         break;
 
@@ -94,30 +96,10 @@ public class MainActivity extends AppCompatActivity {
                 return true;
             }
         });
+//charger le produits du produits.txt
+         chargerProduits();
 
-
-        listView = findViewById(R.id.listView);
-        btnLister = findViewById(R.id.btnLister);
-        btnAjouter = findViewById(R.id.btnAjouter);
-        btnSave = findViewById(R.id.btnSave);
-
-        chargerProduits();
-
- //         btnLister.setOnClickListener(view -> listerProduits());
-
-   //       btnAjouter.setOnClickListener(view -> openAddProduct()); // sauvegarderProduits()
-
-//         btnSave.setOnClickListener(view -> sauvegarderProduits());
-
-//        if(!isExternalStorageAvailableForRw()){
-//            btnSave.setEnabled(false);
-//        }
-
-  //        ajoutNouveauProduit();
     }
-
-
-//TODO handle if file doesn't exist?
     public void chargerProduits(){
         String string = "";
         FileInputStream fis = null;
@@ -151,34 +133,9 @@ public class MainActivity extends AppCompatActivity {
             e.printStackTrace();
         }
     }
-//liste les produits dans un ListView
-    public void listerProduits(){
-        adapter = new ArrayAdapter<>(this,
-                android.R.layout.simple_list_item_1, listeProduits);
-        listView.setAdapter(adapter);
-    }
-
-//    private void openAddProduct(){
-//
-//        sauvegarderProduits();
-//    }
-  //sauvegarde les produis de la listeProduits dans le fichier profuits.txt  TODO recupereaza produsul din addProd activity
     public void sauvegarderProduits() {
-        //ouvre l'activité add_product pout le formulaire ajouter produit
-        Intent intent = new Intent(getApplicationContext(),AddProduct.class);
-        startActivity(intent);
+        ajoutNouveauProduit();
 
- //       ajoutNouveauProduit();
-
-        //recupère le produit crée dans l'activité add_product et l'ajoute au listeProduits
-        Intent i = getIntent();
-        Produit nProduit = i.getParcelableExtra("produit");
-        if(nProduit != null)
-            Log.i("produitMain",nProduit.toString());
-        listeProduits.add(nProduit);
-        Log.e("list",listeProduits.toString());
-
-//ecrire le contenu du listeProduits dans le fichier produits.txt
         StringBuilder filecontent = new StringBuilder();
 
         for(Produit unProd : listeProduits) {
@@ -206,22 +163,145 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-//    private void ajoutNouveauProduit(){
-//
-//    }
+    public void listerProduits(){
+        adapter = new ArrayAdapter<>(this,
+                android.R.layout.simple_list_item_1, listeProduits);
+        listView.setAdapter(adapter);
+    }
+
+    private void openAddProduct(){
+        Intent intent = new Intent(getApplicationContext(),AddProduct.class);
+        startActivity(intent);
+    }
+
+    public void ajoutNouveauProduit(){
+        Intent i = getIntent();
+        Produit nProduit = i.getParcelableExtra("produit");
+        if(nProduit != null) {
+            Log.i("produitMain", nProduit.toString());
+            listeProduits.add(nProduit);
+        }
+        Log.e("list",listeProduits.toString());
+    }
 
     //methode privée pour transformer le produit en string en ayant comme delimiteur ";"
     private String insert(Produit unProduit) {
-        String prodString = "";
- if (unProduit != null) {
-     prodString = unProduit.getId() + ";"
-             + unProduit.getNom() + ";"
-             + unProduit.getCateg() + ";"
-             + unProduit.getPrix() + ";"
-             + unProduit.getQte() + "\n";
- }
+        String prodString;
+
+        prodString = unProduit.getId()+";"
+                +unProduit.getNom()+";"
+                +unProduit.getCateg()+";"
+                +unProduit.getPrix()+";"
+                +unProduit.getQte()+"\n";
+
         return prodString;
     }
+
+////TODO handle if file doesn't exist?
+//    public void chargerProduits(){
+//        String string = "";
+//        FileInputStream fis = null;
+//        try {
+//            fis = openFileInput("produits.txt");
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//        BufferedReader reader = new BufferedReader(new InputStreamReader(fis));
+//        while (true) {
+//            try {
+//                if ((string = reader.readLine()) == null) break;
+//            }
+//            catch (IOException e) {
+//                e.printStackTrace();
+//            }
+//            String[] parts = string.split(";", 5);
+//
+//            int id = Integer.parseInt(parts[0]);
+//            String nom = parts[1];
+//            String categ = parts[2];
+//            double prix = Double.parseDouble(parts[3]);
+//            int qte = Integer.parseInt(parts[4]);
+//
+//            listeProduits.add(new Produit(id,nom,categ,prix,qte));
+//        }
+//        try {
+//            assert fis != null;
+//            fis.close();
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//    }
+////affiche listeProduit dans une listeView TODO
+//    public void listerProduits(){
+//        adapter = new ArrayAdapter<>(this,
+//                android.R.layout.simple_list_item_1, listeProduits);
+//        listView.setAdapter(adapter);
+//    }
+//
+////    private void openAddProduct(){
+////
+////        sauvegarderProduits();
+////    }
+//  //sauvegarde les produis de la listeProduits dans le fichier profuits.txt  TODO recupereaza produsul din addProd activity
+//    public void sauvegarderProduits() {
+//        //ouvre l'activité add_product pout le formulaire ajouter produit
+//        Intent intent = new Intent(getApplicationContext(),AddProduct.class);
+//        startActivity(intent);
+//
+// //       ajoutNouveauProduit();
+//
+//        //recupère le produit crée dans l'activité add_product et l'ajoute au listeProduits
+//        Intent i = getIntent();
+//        Produit nProduit = i.getParcelableExtra("produit");
+//        if(nProduit != null)
+//            Log.i("produitMain",nProduit.toString());
+//        listeProduits.add(nProduit);
+//        Log.e("list",listeProduits.toString());
+//
+////ecrire le contenu du listeProduits dans le fichier produits.txt
+//        StringBuilder filecontent = new StringBuilder();
+//
+//        for(Produit unProd : listeProduits) {
+//            filecontent.append(insert(unProd));
+//        }
+//        Log.i("filecontent", filecontent.toString());
+//
+//        FileOutputStream fos = null;
+//        try {
+//            fos = openFileOutput("produits.txt", MODE_PRIVATE);
+//            fos.write(filecontent.toString().getBytes());
+//
+//            Toast.makeText(this, "Saved to "+getFilesDir(),Toast.LENGTH_LONG).show();
+//
+//        }catch (IOException e){
+//            e.printStackTrace();
+//        }finally {
+//            if(fos !=null){
+//                try {
+//                    fos.close();
+//                } catch (IOException e) {
+//                    e.printStackTrace();
+//                }
+//            }
+//        }
+//    }
+//
+////    private void ajoutNouveauProduit(){
+////
+////    }
+//
+//    //methode privée pour transformer le produit en string en ayant comme delimiteur ";"
+//    private String insert(Produit unProduit) {
+//        String prodString = "";
+// if (unProduit != null) {
+//     prodString = unProduit.getId() + ";"
+//             + unProduit.getNom() + ";"
+//             + unProduit.getCateg() + ";"
+//             + unProduit.getPrix() + ";"
+//             + unProduit.getQte() + "\n";
+// }
+//        return prodString;
+//    }
 }
 
 
