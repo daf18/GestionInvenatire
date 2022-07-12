@@ -105,7 +105,7 @@ public class Produit implements Parcelable {
                 "nom=" + nom +
                 ", categ=" + categ +",\n"+
                 "prix= $" + prix +
-                ", qte=" + qte;
+                ", qte=" + qte+"\n";
     }
 
     @Override
