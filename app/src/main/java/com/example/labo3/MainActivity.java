@@ -2,7 +2,6 @@ package com.example.labo3;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -11,6 +10,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -47,6 +47,8 @@ public class MainActivity extends AppCompatActivity {
     ArrayAdapter<String> adapterCategorie; //
     ListView listView;
 
+    TextView tvTotalMain;
+
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if(actionBarDrawerToggle.onOptionsItemSelected(item)){
@@ -64,7 +66,7 @@ public class MainActivity extends AppCompatActivity {
         listView = findViewById(R.id.listView);
         btnSave = findViewById(R.id.btnSave);
 
-   //     btnSave.setVisibility(View.GONE);
+        tvTotalMain = findViewById(R.id.tvTotalMain);
 
         spinnerCateg = findViewById(R.id.spinnerCateg);
 
@@ -80,29 +82,30 @@ public class MainActivity extends AppCompatActivity {
         //ajouter les listeners pour les activités
         demarerActivite();
 
-      //  creerListeCateg();
+        //  creerListeCateg();
         //   TODO disable spinner
-         //spinner.setEnabled(false);
+       // spinnerCateg.setEnabled(false);
 
         //charger le produits du produits.txt
         chargerProduits();
 
         //set up spinner TODO comment
-         adapterCategorie = new ArrayAdapter<>(getApplicationContext(), android.R.layout.simple_spinner_item, listeCateg);
-         adapterCategorie.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        adapterCategorie = new ArrayAdapter<>(getApplicationContext(), android.R.layout.simple_spinner_item, listeCateg);
+        adapterCategorie.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
         spinnerCateg.setAdapter(adapterCategorie);
-          adapterCategorie.notifyDataSetChanged();
+        adapterCategorie.notifyDataSetChanged();
 
 
         spinnerCateg.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
                 //parent.getItemAtPosition(pos).toString()
-                Toast.makeText(parent.getContext(), listeCateg.get(pos), Toast.LENGTH_SHORT).show();
+              //  Toast.makeText(parent.getContext(), listeCateg.get(pos), Toast.LENGTH_SHORT).show();
 //                Log.d("selected", "CategSelected ");
-
                 categorie = listeCateg.get(pos);
+
+
                 Log.d("CategorieSpinner",categorie);
             }
 
@@ -125,6 +128,7 @@ public class MainActivity extends AppCompatActivity {
 
             switch (item.getItemId()) {
                 case R.id.nav_lister:
+                    resetView();
                     listerProduits();
                     drawerLayout.closeDrawer(GravityCompat.START);
                     break;
@@ -136,14 +140,17 @@ public class MainActivity extends AppCompatActivity {
                     break;
 
                 case R.id.nav_categ:
-                    //TODO move visibility
-                 //   spinnerCateg.setVisibility(View.VISIBLE);
-                  //  Log.i("Categ", listeCateg.toString());
-                    listeProduitSelonCategorie(categorie);
+                    if(categorie.equalsIgnoreCase("Choisir la catégorie")){
+                        Toast.makeText(MainActivity.this,"Choissisez une catégorie",Toast.LENGTH_LONG).show();
+                    }else {
+                        listeProduitSelonCategorie(categorie);
+                    }
+
                     drawerLayout.closeDrawer(GravityCompat.START);
                     break;
 
                 case R.id.nav_total:
+                    totalInventaire();
                     drawerLayout.closeDrawer(GravityCompat.START);
                     break;
             }
@@ -169,7 +176,7 @@ public class MainActivity extends AppCompatActivity {
 //lis fichier produits.txt
         String string = "";
         FileInputStream fis = null;
-//listeCateg.add(0,"Choisir la catégorie"); //TODO default value spinner
+listeCateg.add(0,"Choisir la catégorie");
         try {
             fis = openFileInput("produits.txt");
 
@@ -284,20 +291,46 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void listeProduitSelonCategorie(String categ){
-    //ajouter la catégorie à la liste de catégories( si pas déjà presante )
-    for(Produit prod : listeProduits){
-        if(prod.getCateg().equals(categ)){
-            listeProduitsCateg.add(prod);
-            Log.d("ProdCateg", listeProduitsCateg.toString());
+     //   spinnerCateg.setVisibility(View.VISIBLE);
+        //ajouter la catégorie à la liste de catégories( si pas déjà presante )
+        for(Produit prod : listeProduits){
+            if(prod.getCateg().equals(categ)){
+                listeProduitsCateg.add(prod);
+                Log.d("ProdCateg", listeProduitsCateg.toString());
+            }
         }
-    }
         Intent intentCateg = new Intent(getApplicationContext(),ProductsByCategory.class);
-    Bundle bundle = new Bundle();
-    bundle.putParcelableArrayList("listeProduitsCateg", listeProduitsCateg);
-    intentCateg.putExtras(bundle);
-    startActivity(intentCateg);
+        Bundle bundle = new Bundle();
+        bundle.putParcelableArrayList("listeProduitsCateg", listeProduitsCateg);
+        intentCateg.putExtras(bundle);
+        startActivity(intentCateg);
         //finish();
-}
+    }
+    public void totalInventaire(){
+        Double total = 0.00;
+        for(Produit prod: listeProduits){
+            if(prod.getQte() > 0){
+                total += prod.getPrix()*prod.getQte();
+            }
+        }
+        Log.d("total",total.toString());
+        //cacher spinner
+        spinnerCateg.setVisibility(View.GONE);
+        //cacher listView
+        listView.setVisibility(View.GONE);
+
+        tvTotalMain.setVisibility(View.VISIBLE);
+        tvTotalMain.setText("Le montant total de l'inventaire est : " + total.toString() + " $");
+
+    }
+    public void resetView(){
+        tvTotalMain.setVisibility(View.GONE);
+        //cacher spinner
+        spinnerCateg.setVisibility(View.VISIBLE);
+        //cacher listView
+        listView.setVisibility(View.VISIBLE);
+
+    }
 
 }
 
