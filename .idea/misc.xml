@@ -5,7 +5,8 @@
       <map>
         <entry key="app/src/main/res/drawable/ic_baseline_add_card_24.xml" value="0.1415" />
         <entry key="app/src/main/res/layout/activity_add_product.xml" value="0.23854166666666668" />
-        <entry key="app/src/main/res/layout/activity_main.xml" value="0.30650177001953127" />
+        <entry key="app/src/main/res/layout/activity_main.xml" value="0.22507934570312502" />
+        <entry key="app/src/main/res/layout/activity_product_by_category.xml" value="0.20260416666666667" />
         <entry key="app/src/main/res/layout/add_product.xml" value="0.2515625" />
         <entry key="app/src/main/res/layout/header_menu.xml" value="0.2515625" />
         <entry key="app/src/main/res/menu/main_menu.xml" value="0.1640625" />

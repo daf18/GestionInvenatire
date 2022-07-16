@@ -6,23 +6,13 @@ import android.os.Parcelable;
 public class Produit implements Parcelable {
     private int id;
     private String nom;
-
-//    private enum categ {
-//        //TODO ar trebui in caps ca sunt constante
-//        Boisson,
-//        Condiments,
-//        ProduitsSecs,
-//        Viandes,
-//        PoissonsEtFruitDeMer
-//    }
     private String categ;
-
     private double prix;
     private int qte;
     private static int nbProduits;
 
     public Produit(int id, String nom, String categ, double prix, int qte) {
-        this.id = id; //TODO ++id for autoincrement
+        this.id = id;
         this.nom = nom;
         this.categ = categ;
         this.prix = prix;

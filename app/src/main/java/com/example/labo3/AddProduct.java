@@ -41,12 +41,13 @@ btnAdd.setOnClickListener(view -> addProduct());
     public void addProduct(){
 
         isAllFieldsChecked = checkAllFields();
-        Intent intent = new Intent(getApplicationContext(),MainActivity.class);
-        //envoyer le produit a MainActivity
-        intent.putExtra("produit", (Parcelable) produit);
-        startActivity(intent);
-        finish();
-
+        if (isAllFieldsChecked) {
+            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+            //envoyer le produit a MainActivity
+            intent.putExtra("produit", (Parcelable) produit);
+            startActivity(intent);
+            finish();
+        }
     }
     private boolean checkAllFields(){
         String id = etId.getText().toString();
