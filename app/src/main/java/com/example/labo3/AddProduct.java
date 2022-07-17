@@ -1,8 +1,13 @@
 package com.example.labo3;
 
+import static java.lang.String.*;
+
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.icu.text.DecimalFormat;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.util.Log;
@@ -10,12 +15,17 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import java.util.Locale;
 
+
+@RequiresApi(api = Build.VERSION_CODES.N)
 public class AddProduct extends AppCompatActivity {
 EditText etId, etName, etCateg, etPrice, etQuantity;
 Button btnCancel, btnAdd;
 boolean isAllFieldsChecked;
 Produit produit;
+
+    private static final DecimalFormat df = new DecimalFormat("0.00");
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -95,14 +105,16 @@ btnAdd.setOnClickListener(view -> addProduct());
             return false;
         }
         Toast.makeText(this,"Produit "+id+" a été bien enregistré", Toast.LENGTH_LONG).show();
+
+
         produit = new Produit(Integer.parseInt(id),
                 name,
                 categ,
-                Double.parseDouble(price),
+                Double.parseDouble(df.format(Double.parseDouble(price))),
                 Integer.parseInt(qte));
+
         Log.i("produit",produit.toString());
     // si tous les champs sont remplis , retourner true
         return true;
     }
-
 }

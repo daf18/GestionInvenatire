@@ -118,7 +118,10 @@ public class MainActivity extends AppCompatActivity {
         btnSave.setOnClickListener(view -> {
             sauvegarderProduits();
             Toast.makeText(MainActivity.this,"Sauvgarde terminée avec succès",Toast.LENGTH_LONG).show();
+            btnSave.setVisibility(View.GONE);
         });
+        //cacher le button après avoir sauvgarder le fichier
+
 
         //   listerProduits();
     }
@@ -141,11 +144,10 @@ public class MainActivity extends AppCompatActivity {
 
                 case R.id.nav_categ:
                     if(categorie.equalsIgnoreCase("Choisir la catégorie")){
-                        Toast.makeText(MainActivity.this,"Choissisez une catégorie",Toast.LENGTH_LONG).show();
+                        Toast.makeText(MainActivity.this,"Choissisez une catégorie dans l'écran principal   ",Toast.LENGTH_LONG).show();
                     }else {
                         listeProduitSelonCategorie(categorie);
                     }
-
                     drawerLayout.closeDrawer(GravityCompat.START);
                     break;
 
@@ -198,7 +200,7 @@ listeCateg.add(0,"Choisir la catégorie");
             String categ = parts[2].trim();
             double prix = Double.parseDouble(parts[3]);
             int qte = Integer.parseInt(parts[4]);
-//ajoute un nouveau produit à la liste de produits
+    //ajoute un nouveau produit à la liste de produits
             listeProduits.add(new Produit(id,nom,categ,prix,qte));
 
             //ajout categ à listeCateg
@@ -252,6 +254,8 @@ listeCateg.add(0,"Choisir la catégorie");
 
         adapter = new ArrayAdapter<>(this,
                 android.R.layout.simple_list_item_1, listeProduits);
+   //     listView.addFooterView(btnSave); //TODO listView here
+
         listView.setAdapter(adapter);
     }
     //ouvre l'activité add_product pour le formulaire ajouter produit
@@ -267,7 +271,11 @@ listeCateg.add(0,"Choisir la catégorie");
         if(nProduit != null) {
             Log.i("produitMain", nProduit.toString());
             listeProduits.add(nProduit);
+
+            //button sauvgarder visible
             btnSave.setVisibility(View.VISIBLE); //TODO added here
+          //  android:layout_height="454dp"
+
             //ajout categ à listeCateg
             if ( !listeCateg.contains(nProduit.getCateg())){
                 listeCateg.add(nProduit.getCateg().trim());
@@ -286,7 +294,7 @@ listeCateg.add(0,"Choisir la catégorie");
                 +unProduit.getCateg()+";"
                 +unProduit.getPrix()+";"
                 +unProduit.getQte()+"\n";
-
+       // cout.setText("$"+String.format("%.2f",total));
         return prodString;
     }
 
@@ -318,6 +326,8 @@ listeCateg.add(0,"Choisir la catégorie");
         spinnerCateg.setVisibility(View.GONE);
         //cacher listView
         listView.setVisibility(View.GONE);
+        //cacher button sauvgarder
+        btnSave.setVisibility(View.GONE);
 
         tvTotalMain.setVisibility(View.VISIBLE);
         tvTotalMain.setText("Le montant total de l'inventaire est : " + total.toString() + " $");
